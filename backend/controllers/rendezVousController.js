@@ -1,0 +1,47 @@
+const db = require('../db');
+
+exports.ajouterRendezVous = async (req, res) => {
+  const { patient_id, date_rdv, motif, statut } = req.body;
+
+  try {
+    const result = await db.query(
+      `INSERT INTO rendez_vous (patient_id, date_rdv, motif, statut)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [patient_id, date_rdv, motif, statut || 'prévu']
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur lors de la création du rendez-vous' });
+  }
+};
+
+exports.modifierRendezVous = async (req, res) => {
+  const { id } = req.params;
+  const { date_rdv, motif, statut } = req.body;
+
+  try {
+    const result = await db.query(
+      `UPDATE rendez_vous
+       SET date_rdv = $1, motif = $2, statut = $3
+       WHERE id = $4 RETURNING *`,
+      [date_rdv, motif, statut, id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur lors de la mise à jour du rendez-vous' });
+  }
+};
+
+exports.supprimerRendezVous = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await db.query('DELETE FROM rendez_vous WHERE id = $1', [id]);
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ error: 'Erreur lors de la suppression du rendez-vous' });
+  }
+};
