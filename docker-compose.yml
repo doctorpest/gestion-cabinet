@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks:
+      - appnet
+
+  frontend:
+    build: ./frontend/gestion-cabinet-front
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge

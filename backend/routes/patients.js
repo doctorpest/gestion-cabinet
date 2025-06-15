@@ -4,9 +4,14 @@ const controller = require('../controllers/patientsController');
 const { authGuard } = require('../middlewares/auth');
 
 router.get('/', authGuard,controller.getAllPatients);
+router.get('/assures', controller.getPatientsAssures);
+router.get('/avec-factures', controller.getPatientsAvecFactures);
 router.get('/:id', controller.getPatientById);
+
 router.post('/', controller.createPatient);
 router.put('/:id', controller.updatePatient);
+
+
 router.delete('/:id', controller.deletePatient);
 
 module.exports = router;

@@ -1,5 +1,20 @@
 const db = require('../db');
 
+
+exports.getAllRendezVous = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT r.*, p.nom, p.prenom
+      FROM rendez_vous r
+      JOIN patients p ON r.patient_id = p.id
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur lors de la récupération des rendez-vous' });
+  }
+};
+
 exports.ajouterRendezVous = async (req, res) => {
   const { patient_id, date_rdv, motif, statut } = req.body;
 

@@ -41,6 +41,24 @@ exports.updateFacture = async (req, res) => {
   }
 };
 
+exports.getFactureTotalsByPatient = async (req, res) => {
+  const { patientId } = req.params;
+  try {
+    const result = await db.query(
+      `SELECT 
+         COALESCE(SUM(montant_total), 0) AS total_montant, 
+         COALESCE(SUM(montant_paye), 0) AS total_paye
+       FROM factures
+       WHERE patient_id = $1`,
+      [patientId]
+    );
+    res.json(result.rows[0]); // Renvoie un objet { total_montant, total_paye }
+  } catch (err) {
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+
 exports.deleteFacture = async (req, res) => {
   const { id } = req.params;
   try {
