@@ -1,26 +1,79 @@
-version: "3.8"
+# version: "3.8"
+
+# services:
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - .env
+#     volumes:
+#       - ./backend/uploads:/app/uploads
+#     networks:
+#       - appnet
+
+#   frontend:
+#     build: ./frontend/gestion-cabinet-front
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - backend
+#     networks:
+#       - appnet
+
+# networks:
+#   appnet:
+#     driver: bridge
+
+version: "3.9"
 
 services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: doctorpest
+      POSTGRES_PASSWORD: mdpcabinet
+      POSTGRES_DB: gestion_cabinet
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - appnet
+
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - ./backend:/app
     env_file:
       - .env
-    volumes:
-      - ./backend/uploads:/app/uploads
+    depends_on:
+      - postgres
     networks:
       - appnet
 
   frontend:
-    build: ./frontend/gestion-cabinet-front
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quasar-frontend
     ports:
-      - "80:80"
+      - "8080:80" # nginx sert sur le port 80 interne, on le mappe sur 8080 local
     depends_on:
       - backend
     networks:
       - appnet
+    restart: unless-stopped
 
 networks:
   appnet:
     driver: bridge
+volumes:
+  pgdata:
+
+
+

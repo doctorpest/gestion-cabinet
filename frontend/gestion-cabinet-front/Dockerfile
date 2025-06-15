@@ -1,19 +1,14 @@
-# Étape 1 : Build Quasar app
-FROM node:20 AS build
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-# Étape 2 : Serve via Nginx
+# Dockerfile
 FROM nginx:alpine
 
-COPY --from=build /app/dist/spa /usr/share/nginx/html
+# Copie les fichiers Quasar déjà buildés
+COPY gestion-cabinet/frontend/gestion-cabinet-front/dist/spa /usr/share/nginx/html
+
+# Optionnel : suppression du fichier de conf par défaut NGINX
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Ajout de ta propre config (si nécessaire)
+# COPY nginx.conf /etc/nginx/conf.d
 
 EXPOSE 80
 

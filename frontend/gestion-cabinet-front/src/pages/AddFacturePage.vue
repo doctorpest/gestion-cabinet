@@ -33,14 +33,7 @@
             @click.stop="openFactureDialog(props.row)"
             title="Ajouter facture"
           />
-          <q-btn
-            flat
-            round
-            icon="description"
-            color="secondary"
-            @click.stop="generateCertificate(props.row)"
-            title="Certificat médical"
-          />
+
           <q-btn
             flat
             round
@@ -208,7 +201,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+//import { useRouter } from 'vue-router'
 import api from '../api'
 
 interface Patient {
@@ -232,7 +225,7 @@ interface Facture {
 }
 
 
-const router = useRouter()
+//const router = useRouter()
 const search = ref('')
 const patients = ref<Patient[]>([])
 
@@ -408,9 +401,9 @@ const viewPatientDetails = async (patient: Patient) => {
 
 
 
-const generateCertificate = async (patient: Patient) => {
-  await router.push(`/patients/${patient.id}/certificat`)
-}
+// const generateCertificate = async (patient: Patient) => {
+//   await router.push(`/patients/${patient.id}/certificat`)
+// }
 
 const montantTotalFormate = computed(() =>
   facture.value ? facture.value.montant_total.toFixed(2) : '0.00'
