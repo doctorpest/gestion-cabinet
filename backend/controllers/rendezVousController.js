@@ -60,3 +60,18 @@ exports.supprimerRendezVous = async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la suppression du rendez-vous' });
   }
 };
+
+exports.mettreAJourStatutsPasses = async (req, res) => {
+  try {
+    const result = await db.query(
+      `UPDATE rendez_vous
+       SET statut = 'passé'
+       WHERE statut = 'prévu' AND date_rdv < NOW()`
+    );
+
+    res.status(200).json({ message: 'Statuts mis à jour' });
+  } catch (err) {
+    console.error('Erreur mise à jour statuts passés :', err);
+    res.status(500).json({ error: 'Erreur mise à jour statuts passés' });
+  }
+}

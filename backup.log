@@ -1,0 +1,19 @@
+⏳ Sauvegarde de la base de données...
+/Users/ayat/gestion-cabinet/backup.sh: line 16: docker: command not found
+✅ Sauvegarde réussie : /Users/ayat/gestion-cabinet/db-init/init_2025-06-25_11-00.sql
+⏳ Sauvegarde de la base de données...
+/Users/ayat/gestion-cabinet/backup.sh: line 16: docker: command not found
+✅ Sauvegarde réussie : /Users/ayat/gestion-cabinet/db-init/init_2025-06-25_14-00.sql
+⏳ Sauvegarde de la base de données...
+/Users/ayat/gestion-cabinet/backup.sh: line 16: docker: command not found
+✅ Sauvegarde réussie : /Users/ayat/gestion-cabinet/db-init/init_2025-06-25_15-00.sql
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory
+/bin/sh: /Users/ayat/gestion-cabinet/backup.sh: No such file or directory

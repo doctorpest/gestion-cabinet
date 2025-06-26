@@ -93,14 +93,14 @@ exports.getPatientById = async (req, res) => {
 
 exports.createPatient = async (req, res) => {
   const {
-    nom, prenom, date_naissance, est_assure = false, pays,
+    nom, prenom, date_naissance, est_assure = false,cin, pays,
     telephone, situation_familiale, nombre_enfants, couverture_sociale
   } = req.body;
   try {
     const result = await db.query(
-      `INSERT INTO patients (nom, prenom, date_naissance, est_assure, pays, telephone, situation_familiale, nombre_enfants, couverture_sociale)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      [nom, prenom, date_naissance, est_assure, pays, telephone, situation_familiale, nombre_enfants, couverture_sociale]
+      `INSERT INTO patients (nom, prenom, date_naissance, est_assure,cin, pays, telephone, situation_familiale, nombre_enfants, couverture_sociale)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10) RETURNING *`,
+      [nom, prenom, date_naissance, est_assure,cin, pays, telephone, situation_familiale, nombre_enfants, couverture_sociale]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -137,6 +137,7 @@ exports.getPatientsAvecFactures = async (req, res) => {
         p.id,
         p.nom,
         p.prenom,
+        p.cin,
         p.couverture_sociale,
         COALESCE(SUM(f.montant_total), 0) AS montant_du,
         COALESCE(SUM(f.montant_paye), 0) AS montant_paye
@@ -157,7 +158,7 @@ exports.getPatientsAvecFactures = async (req, res) => {
 exports.getPatientsAssures = async (req, res) => {
   try {
     const result = await db.query(`
-      SELECT p.id, p.nom, p.prenom, p.couverture_sociale,
+      SELECT p.id, p.nom, p.prenom, p.cin, p.couverture_sociale,
         COALESCE(SUM(f.montant_paye), 0) AS montant_paye
       FROM patients p
       LEFT JOIN factures f ON f.patient_id = p.id

@@ -288,7 +288,8 @@ CREATE TABLE public.patients (
     telephone character varying(20),
     situation_familiale character varying(50),
     nombre_enfants integer,
-    couverture_sociale character varying(100)
+    couverture_sociale character varying(100),
+    cin character varying(20)
 );
 
 
@@ -424,6 +425,44 @@ ALTER TABLE public.services_id_seq OWNER TO doctorpest;
 --
 
 ALTER SEQUENCE public.services_id_seq OWNED BY public.services_a_realiser.id;
+
+
+--
+-- Name: stock_produits; Type: TABLE; Schema: public; Owner: doctorpest
+--
+
+CREATE TABLE public.stock_produits (
+    id integer NOT NULL,
+    nom_produit character varying(255) NOT NULL,
+    fournisseur character varying(255),
+    date_achat date DEFAULT CURRENT_DATE NOT NULL,
+    stock integer DEFAULT 0 NOT NULL,
+    prix_unitaire numeric(10,2) DEFAULT 0.00 NOT NULL
+);
+
+
+ALTER TABLE public.stock_produits OWNER TO doctorpest;
+
+--
+-- Name: stock_produits_id_seq; Type: SEQUENCE; Schema: public; Owner: doctorpest
+--
+
+CREATE SEQUENCE public.stock_produits_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.stock_produits_id_seq OWNER TO doctorpest;
+
+--
+-- Name: stock_produits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: doctorpest
+--
+
+ALTER SEQUENCE public.stock_produits_id_seq OWNED BY public.stock_produits.id;
 
 
 --
@@ -615,6 +654,13 @@ ALTER TABLE ONLY public.services_a_realiser ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: stock_produits id; Type: DEFAULT; Schema: public; Owner: doctorpest
+--
+
+ALTER TABLE ONLY public.stock_produits ALTER COLUMN id SET DEFAULT nextval('public.stock_produits_id_seq'::regclass);
+
+
+--
 -- Name: traitements id; Type: DEFAULT; Schema: public; Owner: doctorpest
 --
 
@@ -718,14 +764,14 @@ COPY public.ordonnances (id, patient_id, medecin_id, date_prescription, remarque
 -- Data for Name: patients; Type: TABLE DATA; Schema: public; Owner: doctorpest
 --
 
-COPY public.patients (id, nom, prenom, date_naissance, est_assure, pays, date_creation, telephone, situation_familiale, nombre_enfants, couverture_sociale) FROM stdin;
-2	Dupont	Jean	1980-04-10	t	France	2025-05-31 20:29:15.134557	\N	\N	\N	\N
-3	Buron	Marylise	1999-12-12	t	France	2025-06-04 00:03:55.081198	\N	\N	\N	\N
-4	Bros	Luigi	2000-04-05	t	Maroc	2025-06-04 00:42:27.387861	+212701099800	Célibataire	0	CNSS
-5	Bros	Mario	2000-03-03	t	France	2025-06-04 01:22:00.08496	+33123456789	Célibataire	0	ASS
-6	Maria	Lisa	2000-12-11	t	Maroc	2025-06-05 00:37:03.641567	+21267898632	Marié	1	CNSS
-7	Olly	Julli	1998-08-09	f	France	2025-06-07 01:15:00.420751	+339874744849	Célibataire	0	\N
-8	sombr	Clairo	1991-04-07	t	Maroc	2025-06-07 01:19:02.737104	+3395959333	Célibataire 	0	CNAM
+COPY public.patients (id, nom, prenom, date_naissance, est_assure, pays, date_creation, telephone, situation_familiale, nombre_enfants, couverture_sociale, cin) FROM stdin;
+2	Dupont	Jean	1980-04-10	t	France	2025-05-31 20:29:15.134557	\N	\N	\N	\N	\N
+3	Buron	Marylise	1999-12-12	t	France	2025-06-04 00:03:55.081198	\N	\N	\N	\N	\N
+4	Bros	Luigi	2000-04-05	t	Maroc	2025-06-04 00:42:27.387861	+212701099800	Célibataire	0	CNSS	\N
+5	Bros	Mario	2000-03-03	t	France	2025-06-04 01:22:00.08496	+33123456789	Célibataire	0	ASS	\N
+6	Maria	Lisa	2000-12-11	t	Maroc	2025-06-05 00:37:03.641567	+21267898632	Marié	1	CNSS	\N
+7	Olly	Julli	1998-08-09	f	France	2025-06-07 01:15:00.420751	+339874744849	Célibataire	0	\N	\N
+8	sombr	Clairo	1991-04-07	t	Maroc	2025-06-07 01:19:02.737104	+3395959333	Célibataire 	0	CNAM	\N
 \.
 
 
@@ -769,6 +815,15 @@ COPY public.services_a_realiser (id, nom, description, tarif, patient_id) FROM s
 5	Dent 41	Détartrage	100.00	4
 6	Dents 42	Détartrage	100.00	5
 7	dent 42	Chnagement de prothèse 	200.00	8
+\.
+
+
+--
+-- Data for Name: stock_produits; Type: TABLE DATA; Schema: public; Owner: doctorpest
+--
+
+COPY public.stock_produits (id, nom_produit, fournisseur, date_achat, stock, prix_unitaire) FROM stdin;
+1	Anesthésie	AMED	2025-06-20	2	120.00
 \.
 
 
@@ -886,6 +941,13 @@ SELECT pg_catalog.setval('public.services_id_seq', 7, true);
 
 
 --
+-- Name: stock_produits_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
+--
+
+SELECT pg_catalog.setval('public.stock_produits_id_seq', 1, true);
+
+
+--
 -- Name: traitements_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
@@ -995,11 +1057,27 @@ ALTER TABLE ONLY public.services_a_realiser
 
 
 --
+-- Name: stock_produits stock_produits_pkey; Type: CONSTRAINT; Schema: public; Owner: doctorpest
+--
+
+ALTER TABLE ONLY public.stock_produits
+    ADD CONSTRAINT stock_produits_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: traitements traitements_pkey; Type: CONSTRAINT; Schema: public; Owner: doctorpest
 --
 
 ALTER TABLE ONLY public.traitements
     ADD CONSTRAINT traitements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: patients unique_cin; Type: CONSTRAINT; Schema: public; Owner: doctorpest
+--
+
+ALTER TABLE ONLY public.patients
+    ADD CONSTRAINT unique_cin UNIQUE (cin);
 
 
 --

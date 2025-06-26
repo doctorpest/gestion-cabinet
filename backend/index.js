@@ -32,6 +32,7 @@ const authRoutes = require('./routes/authRoutes');
 const medicamentsRoutes = require('./routes/medicaments');
 const ordonnancesRoutes = require('./routes/ordonnances');
 const certificatsRoutes = require('./routes/certificats');
+const stockRoutes = require('./routes/stockRoutes');
 
 
 
@@ -57,6 +58,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/medicaments', medicamentsRoutes);
 app.use('/api/ordonnances', ordonnancesRoutes);
 app.use('/api/certificats', certificatsRoutes);
+app.use('/api/stock', stockRoutes);
+
+
 
 
 // app.use('/uploads/schemas', express.static(path.join(__dirname, 'uploads/schemas')))

@@ -39,6 +39,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db-init/restore-if-empty.sh:/docker-entrypoint-initdb.d/restore-if-empty.sh
+      - ./backups:/backups
+    networks:
+      - appnet
+
+  db-backup:
+    image: postgres:15
+    volumes:
+      - ./cron/backup.sh:/backup.sh
+      - ./backups:/backups
+    environment:
+      POSTGRES_DB: gestion_cabinet
+      POSTGRES_USER: doctorpest
+      POSTGRES_PASSWORD: mdpcabinet
+    entrypoint: >
+      sh -c "apt update && apt install -y cron &&
+             echo '*/30 * * * * /backup.sh >> /var/log/cron.log 2>&1' | crontab - &&
+             cron -f"
+    depends_on:
+      - postgres
     networks:
       - appnet
 
