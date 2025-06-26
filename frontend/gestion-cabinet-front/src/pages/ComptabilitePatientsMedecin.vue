@@ -28,16 +28,20 @@
     >
       <template v-slot:body="props">
         <q-tr
-          :props="props">
+          :props="props"
+          :class="!props.row.couverture_sociale || props.row.couverture_sociale.trim() === '' ? 'bg-red-1' : ''"
+        >
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
-            <template v-if="typeof col.field === 'function'">
+            <template v-if="col.name === 'couverture_sociale'">
+              {{ props.row.couverture_sociale || 'Non Assuré' }}
+            </template>
+            <template v-else-if="typeof col.field === 'function'">
               {{ col.field(props.row) }}
             </template>
             <template v-else>
               {{ props.row[col.field] }}
             </template>
           </q-td>
-
         </q-tr>
       </template>
 
@@ -52,21 +56,24 @@
     </q-table>
 
     <!-- Bilan comptable -->
-
+    <div class="q-mt-xl row items-center justify-end">
+      <div class="text-subtitle1 q-mr-sm text-weight-medium text-dark">Bilan Comptable :</div>
+      <q-btn flat label="À déclarer" color="primary" @click="goToCompta" />
+    </div>
   </div>
 </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-//import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import api from '../api'
 
 interface Patient {
   id: number
   nom: string
   prenom: string
-  cin: string
+  couverture_sociale: string | null
   montant_du: number
   montant_paye: number
 }
@@ -74,7 +81,7 @@ interface Patient {
 
 const search = ref('')
 const patients = ref<Patient[]>([])
-//const router = useRouter()
+const router = useRouter()
 
 const fetchPatients = async () => {
   try {
@@ -93,7 +100,7 @@ const fetchPatients = async () => {
 const filteredPatients = computed(() => {
   if (!search.value) return patients.value
   return patients.value.filter(p =>
-    `${p.nom} ${p.prenom} ${p.cin}`.toLowerCase().includes(search.value.toLowerCase())
+    `${p.nom} ${p.prenom}`.toLowerCase().includes(search.value.toLowerCase())
   )
 })
 
@@ -126,9 +133,9 @@ const dateAujourdhui = new Date().toLocaleDateString('fr-FR', {
 const columns = [
   { name: 'nom', label: 'Nom', field: 'nom', align: 'left' as const },
   { name: 'prenom', label: 'Prénom', field: 'prenom', align: 'left' as const },
-  { name: 'cin', label: 'CIN', field: 'cin', align: 'left' as const },
-  { name: 'montant_du', label: 'À payer (dh)', field: 'montant_du', align: 'right' as const },
-  { name: 'montant_paye', label: 'Payé (dh)', field: 'montant_paye', align: 'right' as const },
+  { name: 'couverture_sociale', label: 'Couverture Sociale', field: 'couverture_sociale', align: 'left' as const },
+  { name: 'montant_du', label: 'À payer (€)', field: 'montant_du', align: 'right' as const },
+  { name: 'montant_paye', label: 'Payé (€)', field: 'montant_paye', align: 'right' as const },
   {
     name: 'impaye',
     label: 'Reste impayé (€)',
@@ -137,7 +144,9 @@ const columns = [
   }
 ]
 
-
+const goToCompta = async () => {
+  await router.push('/comptabilite')
+}
 
 onMounted(fetchPatients)
 </script>

@@ -159,6 +159,7 @@
           <div class="text-subtitle1 q-mb-sm">Informations personnelles</div>
           <div><strong>Nom :</strong> {{ selectedPatient1.nom }}</div>
           <div><strong>Prénom :</strong> {{ selectedPatient1.prenom }}</div>
+          <div><strong>CIN :</strong> {{ selectedPatient1.cin || 'N/A' }}</div>
           <div><strong>Date de naissance :</strong> {{ selectedPatient1.date_naissance }}</div>
           <div><strong>Assuré :</strong> {{ selectedPatient1.est_assure ? 'Oui' : 'Non' }}</div>
           <div v-if="selectedPatient1.est_assure"><strong>Couverture sociale :</strong> {{ selectedPatient1.couverture_sociale }}</div>
@@ -173,7 +174,7 @@
         <q-card-section>
           <div class="text-subtitle1 q-mb-sm">Facturation</div>
             <div>
-              <div><strong>Montant total :</strong> {{ montantTotalFormate }} €     <q-badge
+              <div><strong>Montant total :</strong> {{ montantTotalFormate }}DH     <q-badge
                 :label="facture?.statut"
                 :color="facture?.statut === 'Réglé' ? 'green' : 'red'"
                 class="q-ml-sm"
@@ -184,7 +185,7 @@
             <div><strong>Montant payé :</strong> {{ montantPayeFormate }}€</div>
             <div>
               <strong>Reste à payer :</strong>
-              {{ resteAPayer }} €
+              {{ resteAPayer }}DH
             </div>
 
         </q-card-section>
@@ -210,6 +211,7 @@ interface Patient {
   prenom: string
   date_naissance: string
   est_assure: boolean
+  cin?: string
   couverture_sociale?: string
   telephone?: string
   pays?: string
@@ -277,6 +279,7 @@ const facture = ref<{
 const columns = [
   { name: 'nom', label: 'Nom', field: 'nom', align: 'left' as const },
   { name: 'prenom', label: 'Prénom', field: 'prenom', align: 'left' as const },
+  { name: 'cin', label: 'CIN', field: 'cin', align: 'left' as const },
   { name: 'actions', label: '', field: 'actions', align: 'right' as const }
 ]
 
@@ -296,7 +299,7 @@ const fetchPatients = async () => {
 
 const filteredPatients = computed(() =>
   patients.value.filter(p =>
-    `${p.nom} ${p.prenom}`.toLowerCase().includes(search.value.toLowerCase())
+    `${p.nom} ${p.prenom} ${p.cin}`.toLowerCase().includes(search.value.toLowerCase())
   )
 )
 

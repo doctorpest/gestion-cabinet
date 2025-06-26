@@ -10,6 +10,7 @@
           <div class="text-body1">Âge : <span class="text-weight-medium">{{ patient.age }}</span></div>
           <div class="text-body1">Pays : {{ patient.pays }}</div>
           <div class="text-body1">Téléphone : {{ patient.telephone }}</div>
+          <div class="text-body1">CIN : {{ patient.cin }}</div>
           <div class="text-body1">
             Assuré :
             <q-badge color="green" v-if="patient.assure">{{ patient.couverture_sociale || 'Oui' }}</q-badge>
@@ -39,7 +40,7 @@
     <q-card class="q-pa-md q-mb-md shadow-2 bg-grey-1">
       <div class="text-h6 text-indigo q-mb-md">
         <q-icon name="engineering" class="q-mr-sm" />
-        Services à Réaliser
+        Plan de traitement
       </div>
       <q-markup-table dense flat bordered v-if="services.length">
       <thead>
@@ -62,7 +63,7 @@
       <q-btn icon="add_circle" label="Ajouter service" color="indigo" class="q-mt-sm" @click="dialogService = true" />
     </q-card>
     <div class="text-right text-weight-bold q-mt-sm">
-        Total des Services : {{ totalServices.toFixed(2) }} €
+        Total des Services : {{ totalServices.toFixed(2) }}DH
       </div>
 
     <q-card class="q-pa-md q-mb-md shadow-2 bg-grey-1">
@@ -99,12 +100,12 @@
         Facture du patient
         <q-badge v-if="facture.est_reglee" color="green" class="q-ml-sm">Réglée</q-badge>
       </div>
-      <div class="q-mb-xs">Montant total : <strong>{{ Number(facture.montant_total).toFixed(2) }}        €</strong></div>
-      <div class="q-mb-xs">Montant payé : <strong class="text-positive">{{ Number(facture.montant_paye).toFixed(2) }} €</strong></div>
+      <div class="q-mb-xs">Montant total : <strong>{{ Number(facture.montant_total).toFixed(2) }}       DH</strong></div>
+      <div class="q-mb-xs">Montant payé : <strong class="text-positive">{{ Number(facture.montant_paye).toFixed(2) }}DH</strong></div>
       <div>
         Montant impayé :
         <strong :class="facture.montant_total - facture.montant_paye > 0 ? 'text-negative' : 'text-positive'">
-          {{ Math.max(0, Number(facture.montant_total) - Number(facture.montant_paye)).toFixed(2) }} €
+          {{ Math.max(0, Number(facture.montant_total) - Number(facture.montant_paye)).toFixed(2) }}DH
         </strong>
       </div>
     </q-card>
@@ -135,9 +136,9 @@
       <div class="text-h6 text-indigo">Nouveau service</div>
     </q-card-section>
     <q-card-section>
-      <q-input v-model="newService.nom" label="Nom" filled dense class="q-mb-sm" />
+      <q-input v-model="newService.nom" label="Dent" filled dense class="q-mb-sm" />
       <q-input v-model="newService.description" label="Description" type="textarea" filled dense class="q-mb-sm" />
-      <q-input v-model="newService.tarif" label="Tarif (€)" type="number" filled dense />
+      <q-input v-model="newService.tarif" label="Tarif (dh)" type="number" filled dense />
     </q-card-section>
     <q-card-actions align="right">
       <q-btn flat label="Annuler" color="grey" @click="dialogService = false" />
@@ -206,6 +207,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+
 import api from '../api' // adapte ce chemin selon ton projet
 
 // Interfaces typescript
@@ -214,6 +216,7 @@ interface Patient {
   nom: string
   prenom: string
   age: number
+  cin?: string
   pays: string
   telephone: string
   assure: boolean
@@ -405,6 +408,8 @@ async function addService() {
 }
 
 
+
+
 async function addTraitement() {
   if (!newTraitement.value.medecin_id) {
     alert('Veuillez choisir un médecin');
@@ -476,6 +481,7 @@ watch(totalTraitements, async (newTotal) => {
 
 // Chargement initial
 onMounted(async () => {
+
   await fetchPatientData()
   await fetchMedecins()
   await fetchFacture()

@@ -68,16 +68,30 @@
           </div>
 
           <!-- Toggle assuré -->
-          <q-toggle
-            v-model="form.est_assure"
-            label="Le patient est-il assuré ?"
-            color="primary"
-            class="q-mb-sm"
-            checked-icon="mdi-shield-check"
-            unchecked-icon="mdi-shield-off"
-            label-class="text-weight-medium"
-          />
-
+          <div class="row q-col-gutter-sm q-mb-sm items-center">
+            <div class="col-6">
+              <q-toggle
+                v-model="form.est_assure"
+                label="Le patient est-il assuré ?"
+                color="primary"
+                checked-icon="mdi-shield-check"
+                unchecked-icon="mdi-shield-off"
+                label-class="text-weight-medium"
+              />
+            </div>
+            <div class="col-6">
+              <q-input
+                v-model="form.cin"
+                label="CIN"
+                outlined
+                dense
+                clearable
+                class="input-modern"
+                placeholder="Entrez le CIN"
+                :rules="[val => !!val || 'Le CIN est requis']"
+              />
+            </div>
+          </div>
           <q-input
             v-model="form.couverture_sociale"
             label="Couverture sociale"
@@ -85,7 +99,7 @@
             dense
             class="input-modern"
             :disable="!form.est_assure"
-            :rules="form.est_assure ? [val => !!val || 'Ce champ est requis'] : []"
+
             placeholder="Ex: CNSS"
           />
 
@@ -95,7 +109,7 @@
             outlined
             dense
             class="input-modern"
-            :rules="[val => !!val || 'Le pays est requis']"
+
             placeholder="Ex: France"
           />
 
@@ -106,7 +120,7 @@
             dense
             class="input-modern"
             type="tel"
-            :rules="[val => !!val || 'Le téléphone est requis']"
+
             placeholder="+33 6 12 34 56 78"
           />
 
@@ -116,7 +130,7 @@
             outlined
             dense
             class="input-modern"
-            :rules="[val => !!val || 'Ce champ est requis']"
+
             placeholder="Ex: Célibataire"
           />
 
@@ -128,7 +142,7 @@
             outlined
             dense
             class="input-modern"
-            :rules="[val => val >= 0 || 'Nombre invalide']"
+
             placeholder="0"
           />
 
@@ -166,6 +180,7 @@ const form = ref({
   prenom: '',
   date_naissance: '',
   est_assure: false,
+  cin: '',
   couverture_sociale: '',
   pays: '',
   telephone: '',

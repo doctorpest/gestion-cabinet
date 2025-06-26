@@ -23,6 +23,16 @@
           </q-td>
         </template>
 
+        <template v-slot:body-cell-statut="props">
+          <q-td :props="props">
+            <q-badge
+              :color="props.row.statut === 'passé' ? 'grey' : 'green'"
+              :label="props.row.statut"
+              class="text-capitalize"
+            />
+          </q-td>
+        </template>
+
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="text-right">
             <q-btn icon="delete" flat dense color="red" @click="supprimerRendezVous(props.row.id)" />
@@ -227,8 +237,12 @@ const ajouterRendezVous = async () => {
 
     await api.post('/rendez-vous', payload)
     dialog.value = false
-    await fetchRendezVous()
+    //await fetchRendezVous()
     newRdv.value = { patient_id: 0, date: '', heure: '', motif: '', statut: 'prévu' }
+    // Mettre à jour les statuts si la date est déjà passée
+    await api.patch('/rendez-vous/update-statut-passes')
+    await fetchRendezVous()
+
   } catch (err) {
     console.error('Erreur ajout RDV', err)
   }
@@ -255,6 +269,13 @@ const supprimerRendezVous = async (id: number) => {
   }
 }
 
+// const rendezVousFiltres = computed(() => {
+//   const now = new Date()
+//   return rendezVous.value
+//     .filter(r => new Date(r.date_rdv) > now)
+//     .sort((a, b) => new Date(a.date_rdv).getTime() - new Date(b.date_rdv).getTime())
+// })
+
 const rendezVousFiltres = computed(() => {
   const now = new Date()
   return rendezVous.value
@@ -268,6 +289,7 @@ function formatDate(dateStr: string) {
 }
 
 onMounted(async () => {
+  await api.patch('/rendez-vous/update-statut-passes')
   await fetchRendezVous()
   await fetchPatients()
 })

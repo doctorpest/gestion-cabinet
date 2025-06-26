@@ -259,6 +259,9 @@ import { useRouter } from 'vue-router'
 //import axios from 'axios'
 import api from '../api'
 import jsPDF from 'jspdf'
+import headerImage from '../assets/headerImage.js'
+import footerImage from '../assets/footerImage'
+
 
 interface Patient {
   id: number
@@ -444,35 +447,87 @@ const visualiserCertificat = () => {
   showCertificatPreview.value = true;
 }
 
+// const visualiserCertificatPDF = () => {
+//   const doc = new jsPDF()
+//   doc.setFontSize(12)
+
+//   const patient = selectedPatient.value
+//   const medecin = medecinsList.value.find(m => m.id === selectedMedecin.value)
+//   const d = certificatData.value
+
+//   doc.text(`Salé le: ${formatDate(d.dateCertificat)}`, 105, 20, { align: 'center' })
+//   doc.setFontSize(16)
+//   doc.text('Certificat Médical', 105, 30, { align: 'center' })
+//   doc.setFontSize(12)
+
+//   let y = 50
+//   doc.text(`Je soussigné Dr. ${medecin ? medecin.prenom + ' ' + medecin.nom : '.........................................'},`, 10, y)
+//   y += 15
+//   doc.text(`Certifie que l'état de santé de : ${patient ? patient.nom + ' ' + patient.prenom : '.........................................'}`, 10, y)
+//   y += 15
+//   doc.text(`1- Nécessite un arrêt de travail de ${d.nbJours || '.........................................'} jours`, 10, y)
+//   y += 15
+//   doc.text(`Sauf complications, du ${formatDate(d.arretDu) || '.............'} au ${formatDate(d.arretAu) || '.............'} inclus.`, 10, y)
+//   y += 15
+//   doc.text(`2- Nécessite une prolongation d'arrêt de travail de ${d.nbJoursProlongation || '.........................................'} jours`, 10, y)
+//   y += 15
+//   doc.text(`Sauf complications, du ${formatDate(d.arretDu) || '.............'} au ${formatDate(d.arretAu) || '.............'} inclus.`, 10, y)
+//   y += 25
+//   doc.text(`Ce certificat est délivré à l'intéressé pour servir et valoir ce que de droit.`, 105, y, { align: 'center' })
+//   y += 25
+//   doc.text('Signature', 160, y)
+
+//   doc.save('certificat-medical.pdf')
+// }
+
 const visualiserCertificatPDF = () => {
-  const doc = new jsPDF()
+  const doc = new jsPDF({
+  orientation: 'portrait',
+  unit: 'mm',
+  format: 'a5'
+})
   doc.setFontSize(12)
+
+  // 1. Ajout de l'image en tête
+
+  doc.addImage(headerImage, 'PNG', 10, 5, 128, 20) // largeur réduite à ~90% du A5
 
   const patient = selectedPatient.value
   const medecin = medecinsList.value.find(m => m.id === selectedMedecin.value)
   const d = certificatData.value
 
-  doc.text(`Salé le: ${formatDate(d.dateCertificat)}`, 105, 20, { align: 'center' })
+  // 2. Laisse de la place après l'image
   doc.setFontSize(16)
-  doc.text('Certificat Médical', 105, 30, { align: 'center' })
-  doc.setFontSize(12)
+  let y = 40
+  doc.text('Certificat Médical', 74, y, { align: 'center' })
 
-  let y = 50
+  y += 10
+  doc.setFontSize(12)
+  doc.text(`Salé le: ${formatDate(d.dateCertificat)}`, 74, y, { align: 'center' })
+  y += 12
+  doc.setFontSize(10)
+
+  y += 12
   doc.text(`Je soussigné Dr. ${medecin ? medecin.prenom + ' ' + medecin.nom : '.........................................'},`, 10, y)
-  y += 15
+  y += 8
   doc.text(`Certifie que l'état de santé de : ${patient ? patient.nom + ' ' + patient.prenom : '.........................................'}`, 10, y)
-  y += 15
+  y += 8
   doc.text(`1- Nécessite un arrêt de travail de ${d.nbJours || '.........................................'} jours`, 10, y)
-  y += 15
+  y += 8
   doc.text(`Sauf complications, du ${formatDate(d.arretDu) || '.............'} au ${formatDate(d.arretAu) || '.............'} inclus.`, 10, y)
-  y += 15
+  y += 8
   doc.text(`2- Nécessite une prolongation d'arrêt de travail de ${d.nbJoursProlongation || '.........................................'} jours`, 10, y)
-  y += 15
+  y += 8
   doc.text(`Sauf complications, du ${formatDate(d.arretDu) || '.............'} au ${formatDate(d.arretAu) || '.............'} inclus.`, 10, y)
-  y += 25
-  doc.text(`Ce certificat est délivré à l'intéressé pour servir et valoir ce que de droit.`, 105, y, { align: 'center' })
-  y += 25
-  doc.text('Signature', 160, y)
+  y += 12
+  doc.text(`Ce certificat est délivré à l'intéressé pour servir et valoir ce que de droit.`, 74, y, { align: 'center' })
+  y += 20
+  doc.text('Signature', 120, y)
+
+  // 3. Footer texte simple
+
+  doc.addImage(footerImage, 'PNG', 10, 190, 128, 10)
+
 
   doc.save('certificat-medical.pdf')
 }
@@ -482,19 +537,105 @@ const imprimerCertificat = () => {
   visualiserCertificatPDF() // Appelle ici ta fonction jsPDF (renomme si nécessaire)
 }
 
-const exportPDF = () => {
-  const doc = new jsPDF()
-  doc.text(`Ordonnance - ${new Date().toLocaleDateString()}`, 10, 10)
-  doc.text(`Patient: ${selectedPatient.value?.nom} ${selectedPatient.value?.prenom}`, 10, 20)
+// const exportPDF = () => {
+//   const doc = new jsPDF()
 
-  let y = 30
-  for (const m of ordonnanceMedicaments.value) {
-    doc.text(`${m.nom}: ${m.dosage} x ${m.duree}`, 10, y)
-    y += 10
+//   doc.addImage(headerImage, 'PNG', 10, 5, 190, 25) // (x, y, width, height)
+
+//   doc.text(`Ordonnance - ${new Date().toLocaleDateString()}`, 10, 10)
+//   doc.text(`Patient: ${selectedPatient.value?.nom} ${selectedPatient.value?.prenom}`, 10, 20)
+
+//   let y = 30
+//   for (const m of ordonnanceMedicaments.value) {
+//     doc.text(`${m.nom}: ${m.dosage} x ${m.duree}`, 10, y)
+//     y += 10
+//   }
+
+//   doc.addImage(footerImage, 'PNG', 10, 275, 190, 15) // x, y, width, height
+
+//   doc.save('ordonnance.pdf')
+// }
+
+const exportPDF = () => {
+  const doc = new jsPDF({
+  orientation: 'portrait',
+  unit: 'mm',
+  format: 'a5' // <- Le point crucial
+});
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  // 1. En-tête image
+  doc.addImage(headerImage, 'PNG', 10, 5, 128, 20);
+
+  let y = 40;
+
+  // 2. Titre centré
+  doc.setFont('Helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.text('ORDONNANCE', pageWidth / 2, y, { align: 'center' });
+  y += 12;
+
+  // 3. Date centrée
+  doc.setFont('Helvetica', 'normal');
+  doc.setFontSize(12);
+  const date = new Date().toLocaleDateString();
+  doc.text(`Salé Le ${date}`, pageWidth / 2, y, { align: 'center' });
+  y += 15;
+
+  // 4. Infos patient
+  if (selectedPatient.value) {
+  doc.text(
+    `Patient : ${selectedPatient.value.nom} ${selectedPatient.value.prenom}`,
+    pageWidth / 2,
+    y,
+    { align: 'center' }
+  );
+  y += 10;
+}
+
+
+  // 5. Médicaments
+  doc.setFont('Helvetica', 'bold');
+  doc.text('Prescription :', 20, y);
+  y += 10;
+
+  doc.setFont('Helvetica', 'normal');
+  if (ordonnanceMedicaments.value.length > 0) {
+    ordonnanceMedicaments.value.forEach((medoc, index) => {
+      const nom = medoc.nom || 'Nom inconnu';
+      const dosage = medoc.dosage || '......';
+      const duree = medoc.duree || '......';
+
+      doc.text(`${index + 1}. ${nom}`, 25, y);
+      y += 7;
+      doc.text(`   - Dosage : ${dosage}`, 30, y);
+      y += 6;
+      doc.text(`   - Durée : ${duree}`, 30, y);
+      y += 10;
+
+      // Saut de page si on dépasse
+      if (y > pageHeight - 40) {
+        doc.addPage();
+        y = 35;
+        doc.addImage(headerImage, 'PNG', 10, 5, 128, 20);
+        y += 40;
+      }
+    });
+  } else {
+    doc.text('Aucun médicament prescrit.', 25, y);
+    y += 10;
   }
 
-  doc.save('ordonnance.pdf')
-}
+  // 6. Pied de page image
+  doc.addImage(footerImage, 'PNG', 10, 190, 128, 10);
+
+  // 7. Enregistrement
+  const nomFichier = `ordonnance_${selectedPatient.value?.nom || 'patient'}.pdf`;
+  doc.save(nomFichier);
+};
+
 
 const goToPatient = async (_evt: Event, row: Patient) => {
   await router.push(`/patients/${row.id}`)

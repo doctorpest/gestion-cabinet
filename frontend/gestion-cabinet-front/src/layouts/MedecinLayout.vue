@@ -20,6 +20,8 @@
         <q-btn flat dense icon="dashboard" label="Dashboard" @click="router.push('/MedecinDashboard')" />
         <q-btn flat dense icon="people" label="Patients" @click="router.push('/patients')" />
         <q-btn flat dense icon="event" label="Agenda" @click="router.push('/rdv')" />
+        <q-btn flat dense icon="account_balance" label="Comptabilité" @click="router.push('/comptabiliteMedecin')" />
+        <q-btn flat dense icon="inventory" label="Stock" @click="router.push('/stock')" />
         <q-btn flat dense icon="logout" @click="logout" />
 
       </q-toolbar>

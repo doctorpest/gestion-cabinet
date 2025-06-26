@@ -67,14 +67,14 @@ import { ref, computed, onMounted } from 'vue'
 import api from '../api'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import headerImage from '../assets/headerImage.js'
-import footerImage from '../assets/footerImage'
+import headerImage from 'src/assets/headerImage'
+import footerImage from 'src/assets/footerImage'
 
 interface PatientAssure {
   id: number
   nom: string
   prenom: string
-  // couverture_sociale: string
+  couverture_sociale: string
   montant_paye: number
 }
 
@@ -124,20 +124,25 @@ const totalPaye = computed(() =>
 
 function genererPDF() {
   const doc = new jsPDF() as jsPDFWithAutoTable
-
   // 1. En-tête image
   doc.addImage(headerImage, 'PNG', 10, 5, 190, 25)
 
 
-  doc.text(`Fiche de Comptabilité – ${dateAujourdhui}`, 14, 15)
+  //doc.text(`Fiche de Comptabilité – ${dateAujourdhui}`, 14, 15)
+  // 2. Titre centré sous l’en-tête
+  const titre = `Fiche de Comptabilité – ${dateAujourdhui}`
+  const pageWidth = doc.internal.pageSize.getWidth()
+  const textWidth = doc.getTextWidth(titre)
+  const centerX = (pageWidth - textWidth) / 2
+  doc.text(titre, centerX, 50) // Position verticale sous l’en-tête
+
 
   autoTable(doc, {
-    startY: 40,
+    startY: 70,
     head: [['Nom', 'Prénom', 'Montant payé']],
     body: patientsAssures.value.map(p => [
       p.nom,
       p.prenom,
-      // p.couverture_sociale,
       `${Number(p.montant_paye).toFixed(2)}DH`
     ])
   })
@@ -150,3 +155,4 @@ function genererPDF() {
   doc.save(`comptabilite_${dateAujourdhui}.pdf`)
 }
 </script>
+
