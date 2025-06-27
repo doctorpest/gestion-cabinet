@@ -47,7 +47,7 @@
         <tr>
           <th class="text-center">Dents</th>
           <th class="text-center">Description</th>
-          <th class="text-center">Tarif (€)</th>
+          <th class="text-center">Tarif (dh)</th>
         </tr>
       </thead>
       <tbody>
@@ -76,7 +76,7 @@
           <tr>
             <th class="text-center">Date</th>
             <th class="text-center">Note</th>
-            <th class="text-center">Tarif (€)</th>
+            <th class="text-center">Tarif (dh)</th>
           </tr>
         </thead>
         <tbody>
@@ -185,7 +185,7 @@
         class="q-mb-sm"
       />
       <q-input v-model="newTraitement.note" label="Note" type="textarea" filled dense class="q-mb-sm" />
-      <q-input v-model="newTraitement.tarif" label="Tarif (€)" type="number" filled dense />
+      <q-input v-model="newTraitement.tarif" label="Tarif (dh)" type="number" filled dense />
     </q-card-section>
     <q-card-actions align="right">
       <q-btn flat label="Annuler" color="grey" @click="dialogTraitement = false" />

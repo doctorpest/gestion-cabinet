@@ -73,7 +73,7 @@
 
             <q-input
               v-model="factureData.montant_total"
-              label="Montant (€)"
+              label="Montant (dh)"
               type="number"
               filled
               dense
@@ -82,7 +82,7 @@
 
             <q-input
               v-model.number="factureData.montant_paye"
-              label="Montant payé (€)"
+              label="Montant payé (dh)"
               type="number"
               step="0.01"
               filled
@@ -182,7 +182,7 @@
 
 
             </div>
-            <div><strong>Montant payé :</strong> {{ montantPayeFormate }}€</div>
+            <div><strong>Montant payé :</strong> {{ montantPayeFormate }}dh</div>
             <div>
               <strong>Reste à payer :</strong>
               {{ resteAPayer }}DH

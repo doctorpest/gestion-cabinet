@@ -131,7 +131,7 @@ const columns = [
   { name: 'montant_paye', label: 'Payé (dh)', field: 'montant_paye', align: 'right' as const },
   {
     name: 'impaye',
-    label: 'Reste impayé (€)',
+    label: 'Reste impayé (dh)',
     field: (row: Patient) => row.montant_du - row.montant_paye,
     align: 'right' as const
   }

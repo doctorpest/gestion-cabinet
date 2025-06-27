@@ -485,7 +485,7 @@ const visualiserCertificatPDF = () => {
   orientation: 'portrait',
   unit: 'mm',
   format: 'a5'
-})
+  });
   doc.setFontSize(12)
 
   // 1. Ajout de l'image en tête
@@ -529,8 +529,84 @@ const visualiserCertificatPDF = () => {
   doc.addImage(footerImage, 'PNG', 10, 190, 128, 10)
 
 
-  doc.save('certificat-medical.pdf')
-}
+  // 🔥 Impression automatique
+  doc.autoPrint();
+
+  const blob = doc.output('blob');
+  const blobURL = URL.createObjectURL(blob);
+  const printWindow = window.open(blobURL, '_blank');
+
+  if (printWindow) {
+    printWindow.focus();
+  } else {
+    alert("Impossible d'ouvrir le PDF dans une nouvelle fenêtre. Vérifiez votre bloqueur de pop-ups.");
+  }
+  // doc.save('certificat-medical.pdf')
+};
+
+// const visualiserCertificatPDF = () => {
+//   const doc = new jsPDF({
+//   orientation: 'portrait',
+//   unit: 'mm',
+//   format: 'a5'
+//   });
+//   doc.setFontSize(12)
+
+//   // 1. Ajout de l'image en tête
+
+//   doc.addImage(headerImage, 'PNG', 10, 5, 128, 20) // largeur réduite à ~90% du A5
+
+//   const patient = selectedPatient.value
+//   const medecin = medecinsList.value.find(m => m.id === selectedMedecin.value)
+//   const d = certificatData.value
+
+//   // 2. Laisse de la place après l'image
+//   doc.setFontSize(16)
+//   let y = 40
+//   doc.text('Certificat Médical', 74, y, { align: 'center' })
+
+//   y += 10
+//   doc.setFontSize(12)
+//   doc.text(`Salé le: ${formatDate(d.dateCertificat)}`, 74, y, { align: 'center' })
+//   y += 12
+//   doc.setFontSize(10)
+
+//   y += 12
+//   doc.text(`Je soussigné Dr. ${medecin ? medecin.prenom + ' ' + medecin.nom : '.........................................'},`, 10, y)
+//   y += 8
+//   doc.text(`Certifie que l'état de santé de : ${patient ? patient.nom + ' ' + patient.prenom : '.........................................'}`, 10, y)
+//   y += 8
+//   doc.text(`1- Nécessite un arrêt de travail de ${d.nbJours || '.........................................'} jours`, 10, y)
+//   y += 8
+//   doc.text(`Sauf complications, du ${formatDate(d.arretDu) || '.............'} au ${formatDate(d.arretAu) || '.............'} inclus.`, 10, y)
+//   y += 8
+//   doc.text(`2- Nécessite une prolongation d'arrêt de travail de ${d.nbJoursProlongation || '.........................................'} jours`, 10, y)
+//   y += 8
+//   doc.text(`Sauf complications, du ${formatDate(d.arretDu) || '.............'} au ${formatDate(d.arretAu) || '.............'} inclus.`, 10, y)
+//   y += 12
+//   doc.text(`Ce certificat est délivré à l'intéressé pour servir et valoir ce que de droit.`, 74, y, { align: 'center' })
+//   y += 20
+//   doc.text('Signature', 120, y)
+
+//   // 3. Footer texte simple
+
+//   doc.addImage(footerImage, 'PNG', 10, 190, 128, 10)
+
+
+//   // 🔥 Impression automatique
+//   doc.autoPrint();
+
+//   const blob = doc.output('blob');
+//   const blobURL = URL.createObjectURL(blob);
+//   const printWindow = window.open(blobURL, '_blank');
+
+//   if (printWindow) {
+//     printWindow.focus();
+//   } else {
+//     alert("Impossible d'ouvrir le PDF dans une nouvelle fenêtre. Vérifiez votre bloqueur de pop-ups.");
+//   }
+//   // doc.save('certificat-medical.pdf')
+// };
 
 const imprimerCertificat = () => {
   showCertificatPreview.value = false
@@ -555,6 +631,96 @@ const imprimerCertificat = () => {
 
 //   doc.save('ordonnance.pdf')
 // }
+
+// const exportPDF = () => {
+//   const doc = new jsPDF({
+//   orientation: 'portrait',
+//   unit: 'mm',
+//   format: 'a5' // <- Le point crucial
+// });
+
+//   const pageWidth = doc.internal.pageSize.getWidth();
+//   const pageHeight = doc.internal.pageSize.getHeight();
+
+//   // 1. En-tête image
+//   doc.addImage(headerImage, 'PNG', 10, 5, 128, 20);
+
+//   let y = 40;
+
+//   // 2. Titre centré
+//   doc.setFont('Helvetica', 'bold');
+//   doc.setFontSize(16);
+//   doc.text('ORDONNANCE', pageWidth / 2, y, { align: 'center' });
+//   y += 12;
+
+//   // 3. Date centrée
+//   doc.setFont('Helvetica', 'normal');
+//   doc.setFontSize(12);
+//   const date = new Date().toLocaleDateString();
+//   doc.text(`Salé Le ${date}`, pageWidth / 2, y, { align: 'center' });
+//   y += 15;
+
+//   // 4. Infos patient
+//   if (selectedPatient.value) {
+//   doc.text(
+//     `Patient : ${selectedPatient.value.nom} ${selectedPatient.value.prenom}`,
+//     pageWidth / 2,
+//     y,
+//     { align: 'center' }
+//   );
+//   y += 10;
+// }
+
+
+//   // 5. Médicaments
+//   doc.setFont('Helvetica', 'bold');
+//   doc.text('Prescription :', 20, y);
+//   y += 10;
+
+//   doc.setFont('Helvetica', 'normal');
+//   if (ordonnanceMedicaments.value.length > 0) {
+//     ordonnanceMedicaments.value.forEach((medoc, index) => {
+//       const nom = medoc.nom || 'Nom inconnu';
+//       const dosage = medoc.dosage || '......';
+//       const duree = medoc.duree || '......';
+
+//       doc.text(`${index + 1}. ${nom}`, 25, y);
+//       y += 7;
+//       doc.text(`   - Dosage : ${dosage}`, 30, y);
+//       y += 6;
+//       doc.text(`   - Durée : ${duree}`, 30, y);
+//       y += 10;
+
+//       // Saut de page si on dépasse
+//       if (y > pageHeight - 40) {
+//         doc.addPage();
+//         y = 35;
+//         doc.addImage(headerImage, 'PNG', 10, 5, 128, 20);
+//         y += 40;
+//       }
+//     });
+//   } else {
+//     doc.text('Aucun médicament prescrit.', 25, y);
+//     y += 10;
+//   }
+
+//   // 6. Pied de page image
+//   doc.addImage(footerImage, 'PNG', 10, 190, 128, 10);
+
+//   // 7. Enregistrement
+//   // const nomFichier = `ordonnance_${selectedPatient.value?.nom || 'patient'}.pdf`;
+//   // doc.save(nomFichier);
+//   // 2. Lancer l'impression automatiquement
+//   doc.autoPrint();
+
+//   // 3. Ouvrir dans une nouvelle fenêtre pour impression
+//   const pdfBlob = doc.output('blob');
+//   const pdfUrl = URL.createObjectURL(pdfBlob);
+//   const printWindow = window.open(pdfUrl, '_blank');
+//   if (printWindow) {
+//     printWindow.focus();
+//   }
+// };
 
 const exportPDF = () => {
   const doc = new jsPDF({
@@ -632,8 +798,18 @@ const exportPDF = () => {
   doc.addImage(footerImage, 'PNG', 10, 190, 128, 10);
 
   // 7. Enregistrement
-  const nomFichier = `ordonnance_${selectedPatient.value?.nom || 'patient'}.pdf`;
-  doc.save(nomFichier);
+  // const nomFichier = `ordonnance_${selectedPatient.value?.nom || 'patient'}.pdf`;
+  // doc.save(nomFichier);
+  // 2. Lancer l'impression automatiquement
+  doc.autoPrint();
+
+  // 3. Ouvrir dans une nouvelle fenêtre pour impression
+  const pdfBlob = doc.output('blob');
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  const printWindow = window.open(pdfUrl, '_blank');
+  if (printWindow) {
+    printWindow.focus();
+  }
 };
 
 

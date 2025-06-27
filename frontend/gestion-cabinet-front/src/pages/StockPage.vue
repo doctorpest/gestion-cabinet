@@ -149,12 +149,12 @@ const newProduit = ref({
 })
 
 const columns: QTableColumn[] = [
-  { name: 'id', label: 'ID', field: 'id', align: 'center' },
+  // { name: 'id', label: 'ID', field: 'id', align: 'center' },
   { name: 'nom_produit', label: 'Nom du produit', field: 'nom_produit', align: 'center' },
   { name: 'fournisseur', label: 'Fournisseur', field: 'fournisseur', align: 'center' },
   { name: 'date_achat', label: 'Date d\'achat', field: 'date_achat', align: 'center' },
   { name: 'stock', label: 'Stock', field: 'stock', align: 'center' },
-  { name: 'prix_unitaire', label: 'Prix unitaire (€)', field: 'prix_unitaire', align: 'center' },
+  { name: 'prix_unitaire', label: 'Prix unitaire (dh)', field: 'prix_unitaire', align: 'center' },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' },
 ]
 

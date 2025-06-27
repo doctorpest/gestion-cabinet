@@ -134,11 +134,11 @@ const columns = [
   { name: 'nom', label: 'Nom', field: 'nom', align: 'left' as const },
   { name: 'prenom', label: 'Prénom', field: 'prenom', align: 'left' as const },
   { name: 'couverture_sociale', label: 'Couverture Sociale', field: 'couverture_sociale', align: 'left' as const },
-  { name: 'montant_du', label: 'À payer (€)', field: 'montant_du', align: 'right' as const },
-  { name: 'montant_paye', label: 'Payé (€)', field: 'montant_paye', align: 'right' as const },
+  { name: 'montant_du', label: 'À payer (dh)', field: 'montant_du', align: 'right' as const },
+  { name: 'montant_paye', label: 'Payé (dh)', field: 'montant_paye', align: 'right' as const },
   {
     name: 'impaye',
-    label: 'Reste impayé (€)',
+    label: 'Reste impayé (dh)',
     field: (row: Patient) => row.montant_du - row.montant_paye,
     align: 'right' as const
   }
