@@ -718,6 +718,20 @@ COPY public.medecins (id, nom, prenom) FROM stdin;
 --
 
 COPY public.medicaments (id, nom, dosage, duree) FROM stdin;
+1	Doliprane 1g EFF	1cp 3x/jour | 1-1-1	\N
+2	Zamox 1g	1cp 2x/jour |1-0-1	x07j
+3	Bi-oragin	1cp 3x/jour, au milieu du repas | 1-1-1	x05j
+4	Codamol plus 500mg	2cp 3x/jour | 2-2-2	\N
+5	Xenid 25mg	2cp 3x/jour | 2-2-2	\N
+6	Dispamox 1g	1cp 2x/jour | 1-0-1	x06j
+7	Biotic plus 1g	1-0-1 x06j	x06j
+8	Neomox 1g	1-0-1 x06j	x06j
+9	Acigam 200mg	1cp 3x/jour |1-1-1	\N
+10	Cetamyl	1-1-1	\N
+11	Cotipred 20mg	3cp en une seule prise après petit-déjeuner	\N
+12	Predni 20mg	3cp en une seule prise après petit-déjeuner	\N
+13	Buccothymol bain de bouche	1 Application 03x/jour	\N
+14	Pansoral gel gingival	1 Application 03x/jour	\N
 \.
 
 
@@ -742,6 +756,7 @@ COPY public.ordonnances (id, patient_id, medecin_id, date_prescription, remarque
 --
 
 COPY public.patients (id, nom, prenom, date_naissance, est_assure, pays, date_creation, telephone, situation_familiale, nombre_enfants, couverture_sociale, cin) FROM stdin;
+1	Marie	Lise	1999-08-08	t	MAROC	2025-06-27 19:51:16.942326	+2126738392	Célibataire	0	CNSS	AE12345
 \.
 
 
@@ -837,7 +852,7 @@ SELECT pg_catalog.setval('public.medecins_id_seq', 1, false);
 -- Name: medicaments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.medicaments_id_seq', 1, false);
+SELECT pg_catalog.setval('public.medicaments_id_seq', 14, true);
 
 
 --
@@ -858,7 +873,7 @@ SELECT pg_catalog.setval('public.ordonnances_id_seq', 1, false);
 -- Name: patients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.patients_id_seq', 1, false);
+SELECT pg_catalog.setval('public.patients_id_seq', 1, true);
 
 
 --
