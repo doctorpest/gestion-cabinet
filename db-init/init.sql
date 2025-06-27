@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.18 (Homebrew)
--- Dumped by pg_dump version 14.18 (Homebrew)
+-- Dumped from database version 15.13 (Debian 15.13-1.pgdg120+1)
+-- Dumped by pg_dump version 15.13 (Debian 15.13-1.pgdg120+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -512,7 +512,7 @@ CREATE TABLE public.users (
     username character varying(100) NOT NULL,
     password text NOT NULL,
     role character varying(20) NOT NULL,
-    CONSTRAINT users_role_check CHECK (((role)::text = ANY ((ARRAY['medecin'::character varying, 'assistante'::character varying])::text[])))
+    CONSTRAINT users_role_check CHECK (((role)::text = ANY (ARRAY[('medecin'::character varying)::text, ('assistante'::character varying)::text])))
 );
 
 
@@ -686,12 +686,6 @@ ALTER TABLE ONLY public.utilisateurs ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 COPY public.allergies (id, patient_id, description) FROM stdin;
-2	2	Allergie au latex
-3	5	Aspirine
-4	5	ibuprofen
-5	4	Allergie au Latex
-6	5	Latex
-7	8	Allergie au Latex
 \.
 
 
@@ -708,19 +702,6 @@ COPY public.certificats (id, patient_id, medecin_id, contenu, date_certificat) F
 --
 
 COPY public.factures (id, patient_id, montant_total, montant_paye, date_emission) FROM stdin;
-2	2	200.00	150.00	2025-05-31 20:30:51.957332
-3	4	150.00	0.00	2025-06-05 01:49:48.591756
-4	5	300.00	0.00	2025-06-05 01:59:08.968852
-5	6	0.00	0.00	2025-06-07 00:34:57.505462
-6	7	0.00	0.00	2025-06-07 01:15:03.014038
-7	8	100.00	50.00	2025-06-07 02:08:34.895164
-8	8	100.00	50.00	2025-06-07 02:09:32.638517
-9	8	200.00	100.00	2025-06-07 02:10:52.998295
-10	8	0.00	200.00	2025-06-11 01:35:56.839651
-11	4	200.00	150.00	2025-06-11 01:41:38.20018
-12	3	0.00	0.00	2025-06-12 00:47:01.030452
-13	8	0.00	200.00	2025-06-14 17:42:45.10122
-14	3	100.00	0.00	2025-06-14 17:44:05.867842
 \.
 
 
@@ -729,7 +710,6 @@ COPY public.factures (id, patient_id, montant_total, montant_paye, date_emission
 --
 
 COPY public.medecins (id, nom, prenom) FROM stdin;
-1	Dupont	Jean-Paul
 \.
 
 
@@ -738,9 +718,6 @@ COPY public.medecins (id, nom, prenom) FROM stdin;
 --
 
 COPY public.medicaments (id, nom, dosage, duree) FROM stdin;
-1	Doliprane 1g EFF	1cp 3x/jour	\N
-2	Zamoz 1g	1cp 2x/jour	07j
-3	Bi-Oragin	1cp 3x/jour, au milieu du repas	05j
 \.
 
 
@@ -765,13 +742,6 @@ COPY public.ordonnances (id, patient_id, medecin_id, date_prescription, remarque
 --
 
 COPY public.patients (id, nom, prenom, date_naissance, est_assure, pays, date_creation, telephone, situation_familiale, nombre_enfants, couverture_sociale, cin) FROM stdin;
-2	Dupont	Jean	1980-04-10	t	France	2025-05-31 20:29:15.134557	\N	\N	\N	\N	\N
-3	Buron	Marylise	1999-12-12	t	France	2025-06-04 00:03:55.081198	\N	\N	\N	\N	\N
-4	Bros	Luigi	2000-04-05	t	Maroc	2025-06-04 00:42:27.387861	+212701099800	Célibataire	0	CNSS	\N
-5	Bros	Mario	2000-03-03	t	France	2025-06-04 01:22:00.08496	+33123456789	Célibataire	0	ASS	\N
-6	Maria	Lisa	2000-12-11	t	Maroc	2025-06-05 00:37:03.641567	+21267898632	Marié	1	CNSS	\N
-7	Olly	Julli	1998-08-09	f	France	2025-06-07 01:15:00.420751	+339874744849	Célibataire	0	\N	\N
-8	sombr	Clairo	1991-04-07	t	Maroc	2025-06-07 01:19:02.737104	+3395959333	Célibataire 	0	CNAM	\N
 \.
 
 
@@ -780,15 +750,6 @@ COPY public.patients (id, nom, prenom, date_naissance, est_assure, pays, date_cr
 --
 
 COPY public.rendez_vous (id, patient_id, date_rdv, motif, statut) FROM stdin;
-1	2	2025-06-10 10:00:00	Contrôle annuel	prévu
-3	2	2025-10-12 00:55:00	Contôle	prévu
-4	4	2025-07-07 12:30:00	Contrôle 	prévu
-5	6	2025-12-12 00:00:00	Traitement	prévu
-6	3	2025-07-08 15:00:00	Traitement	prévu
-7	6	2025-06-07 08:00:00	Contrôle annuel	prévu
-8	7	2025-06-07 14:00:00	Traitements 	prévu
-9	7	2025-06-11 13:00:00	Contrôle	prévu
-10	5	2025-06-14 12:00:00	Traitements 	prévu
 \.
 
 
@@ -797,9 +758,6 @@ COPY public.rendez_vous (id, patient_id, date_rdv, motif, statut) FROM stdin;
 --
 
 COPY public.schema_dentaire (id, patient_id, image_url, data) FROM stdin;
-1	2	\N	\N
-2	8	/uploads/schemas/schema_1749681349656.png	\N
-3	3	/uploads/schemas/schema_1749682222027.png	\N
 \.
 
 
@@ -808,13 +766,6 @@ COPY public.schema_dentaire (id, patient_id, image_url, data) FROM stdin;
 --
 
 COPY public.services_a_realiser (id, nom, description, tarif, patient_id) FROM stdin;
-1	Détartrage	Nettoyage complet des dents	50.00	\N
-2	Dents 41	Nettoyage complet des dents	50.00	2
-3	Dent 52	Carrie	100.00	2
-4	Dents 41	Nettoyage complet des dents	50.00	2
-5	Dent 41	Détartrage	100.00	4
-6	Dents 42	Détartrage	100.00	5
-7	dent 42	Chnagement de prothèse 	200.00	8
 \.
 
 
@@ -823,7 +774,6 @@ COPY public.services_a_realiser (id, nom, description, tarif, patient_id) FROM s
 --
 
 COPY public.stock_produits (id, nom_produit, fournisseur, date_achat, stock, prix_unitaire) FROM stdin;
-1	Anesthésie	AMED	2025-06-20	2	120.00
 \.
 
 
@@ -832,15 +782,6 @@ COPY public.stock_produits (id, nom_produit, fournisseur, date_achat, stock, pri
 --
 
 COPY public.traitements (id, patient_id, medecin_id, date_traitement, note, tarif) FROM stdin;
-2	2	1	2025-06-01	Détartrage effectué	\N
-3	2	1	2025-05-31	Détartrage effectué	\N
-4	2	1	2025-05-31	Détartrage effectué	100.00
-5	2	1	2024-05-07	Carrie	200.00
-6	4	1	2024-07-09	Nettoyage des dents	150.00
-7	5	1	2025-06-08	Examen complet	300.00
-8	8	1	2025-06-19	Détartrage	100.00
-9	8	1	2025-06-12	Suite de la séance précédente	100.00
-10	4	1	2025-06-18	Suivi	50.00
 \.
 
 
@@ -851,6 +792,7 @@ COPY public.traitements (id, patient_id, medecin_id, date_traitement, note, tari
 COPY public.users (id, username, password, role) FROM stdin;
 1	doctorpest	$2b$10$EQuaT6dmsDRjfa3JLjh7fetI3jXbeZXQfT0DCv9/pF/O5lCnclQ3O	medecin
 3	assistante	$2b$10$u57BubQHrdL5JcCJPT11n.OJ7PBiBORBaET2bHbTr0syVmIS1hrES	assistante
+4	abderrahim	$2b$10$MKF/BeY1yPaqxEy0J8XugOHKiVm4W2G9A5LjPCaqyhBLdnA2st/ve	medecin
 \.
 
 
@@ -867,7 +809,7 @@ COPY public.utilisateurs (id, username, password, date_creation) FROM stdin;
 -- Name: allergies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.allergies_id_seq', 7, true);
+SELECT pg_catalog.setval('public.allergies_id_seq', 1, false);
 
 
 --
@@ -881,21 +823,21 @@ SELECT pg_catalog.setval('public.certificats_id_seq', 1, false);
 -- Name: factures_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.factures_id_seq', 14, true);
+SELECT pg_catalog.setval('public.factures_id_seq', 1, false);
 
 
 --
 -- Name: medecins_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.medecins_id_seq', 1, true);
+SELECT pg_catalog.setval('public.medecins_id_seq', 1, false);
 
 
 --
 -- Name: medicaments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.medicaments_id_seq', 3, true);
+SELECT pg_catalog.setval('public.medicaments_id_seq', 1, false);
 
 
 --
@@ -916,49 +858,49 @@ SELECT pg_catalog.setval('public.ordonnances_id_seq', 1, false);
 -- Name: patients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.patients_id_seq', 8, true);
+SELECT pg_catalog.setval('public.patients_id_seq', 1, false);
 
 
 --
 -- Name: rendez_vous_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.rendez_vous_id_seq', 10, true);
+SELECT pg_catalog.setval('public.rendez_vous_id_seq', 1, false);
 
 
 --
 -- Name: schema_dentaire_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.schema_dentaire_id_seq', 3, true);
+SELECT pg_catalog.setval('public.schema_dentaire_id_seq', 1, false);
 
 
 --
 -- Name: services_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.services_id_seq', 7, true);
+SELECT pg_catalog.setval('public.services_id_seq', 1, false);
 
 
 --
 -- Name: stock_produits_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.stock_produits_id_seq', 1, true);
+SELECT pg_catalog.setval('public.stock_produits_id_seq', 1, false);
 
 
 --
 -- Name: traitements_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.traitements_id_seq', 10, true);
+SELECT pg_catalog.setval('public.traitements_id_seq', 1, false);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: doctorpest
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 
 --
